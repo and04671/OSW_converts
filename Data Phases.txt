@@ -1,0 +1,13 @@
+Datasets and Respective Phases:
+
+WA-Proviso: PSRC @ (TCAT Drive> WS Proviso> PSRC)
+Status: data is given for street centerlines. Have not quite figured out how to transfer that data correctly at high enough accuracy to overlapping OSM data. See 'Join Attempts' for notes. Prefixes added to field names 
+
+WA-Proviso: DVRPC @ (TCAT Drive> WS Proviso> DVRPC)
+Status: Prefixes added to field names, OSW fields added successfully
+
+Montgomery County MPN @ (TCAT Drive> OSW Conversion Data in Process> Montgomery, MD)
+Status: Just started to map fields to new OSW fields. First dataset with scripted field renaming and adding
+
+Hartford County @ (TCAT Drive> OSW Conversion Data in Process> Hartford, CT)
+Status: Data reviewed, conversion not yet started
