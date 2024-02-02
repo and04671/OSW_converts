@@ -23,12 +23,14 @@ def addFld(layer, fldname, type):
         dpr.addAttributes([QgsField(fldname, QVariant.Int)])
     layer.updateFields()
 
-
+#Wisam: this is the section of code that dor some reaosn loop through 200 features, then prints complete, instead of all of the features (2000 in the test set)
 for feature in layer.getFeatures():
     new_name = {feature.fieldNameIndex('highway'): 'footway'}
     dpr.changeAttributeValues({feature.id(): new_name})
     print(feature.id())
 print("Complete")
+
+
 # with edit(layer):
 #     for f in layer.getFeatures():
 #         f['footway'] = f['highway']
