@@ -2,6 +2,9 @@ mc=iface.mapCanvas()
 layer = mc.currentLayer()
 dpr = layer.dataProvider()
 
+
+
+#somethings up running this on geopackage
 def addPfx(layer, pfx):
 #a function to add a prefix to all original fields
     layer.startEditing()
@@ -23,38 +26,32 @@ def addFld(layer, fldname, type):
         dpr.addAttributes([QgsField(fldname, QVariant.Int)])
     layer.updateFields()
 
-#Wisam: this is the section of code that dor some reaosn loop through 200 features, then prints complete, instead of all of the features (2000 in the test set)
-for feature in layer.getFeatures():
-    new_name = {feature.fieldNameIndex('highway'): 'footway'}
-    dpr.changeAttributeValues({feature.id(): new_name})
-    print(feature.id())
-print("Complete")
+#enter feature selection expression, the field to edit, and new value
+def changeVal(layer, exp, fld, newval):
+    layer.startEditing()
+    layer.beginEditCommand('Edit')
+    request = QgsFeatureRequest(QgsExpression(exp))
+    for feature in layer.getFeatures(request):
+        oldval = dpr.fieldNameIndex(fld)
+        layer.changeAttributeValue(feature.id(), oldval, newval)
+    layer.endEditCommand()
+    layer.commitChanges()
+    print("Complete")
+    
+#select features in ped network meeting expression criteria: Pathwidth != 4 and Linktype = 2 or 3
+#dissolve road gons
+#select subset not meeting 'entirely within' roadpolygons
 
 
-# with edit(layer):
-#     for f in layer.getFeatures():
-#         f['footway'] = f['highway']
-#         layer.updateFeature(f)    
+# addPfx(layer, 'MPN_')
 
-# layer.startEditing()
-# for feature in layer.getFeatures():
-#     value = expression.evaluate(feature)
-#     layer.changeAttributeValue(feature.id(), index, value)
-
-# features = layer.getFeatures()
-# for feature in features:
-#     value = expression.evaluate(feature)
-#     print(value)
-#     feature[new_field_index] = value
-#     layer.updateFeature(feature)
-
-
-
-#addPfx(layer, 'MPN_')
 # addFld(layer, "highway","string")
 # addFld(layer, "footway","string")
 # addFld(layer, "width","integer")
 # addFld(layer, "crossing:markings","string")
+
+changeVal(layer, "MPN_LINKTYPE !='8'", 'highway', 'footway2')
+# changeVal("MPN_LINKTYPE = '2' AND MPN_PATHWIDTH = '4'", 'footway', 'No sidewalk')
 
 
 
