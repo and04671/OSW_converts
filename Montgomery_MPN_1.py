@@ -1,12 +1,14 @@
+#This script adds prefixes to original fields and creates new OSW fields, and changes field values based on original fields
+
+# Define the layer for the function
 mc=iface.mapCanvas()
 layer = mc.currentLayer()
 dpr = layer.dataProvider()
 
 
-
-#somethings up running this on geopackage
+# Something's up running this on geopackage files
+#This function adds a prefix to all original fields in current layer
 def addPfx(layer, pfx):
-#a function to add a prefix to all original fields
     layer.startEditing()
     for field in layer.fields():
         oldname = field.name()
@@ -17,8 +19,8 @@ def addPfx(layer, pfx):
     layer.updateFields()
     layer.commitChanges()
 
+#This function adds a string or integer field to the current layer
 def addFld(layer, fldname, type):
-#a function to add a string or integer field to the selected layer
     dpr = layer.dataProvider()
     if type == "string":
         dpr.addAttributes([QgsField(fldname, QVariant.String)])
@@ -26,8 +28,8 @@ def addFld(layer, fldname, type):
         dpr.addAttributes([QgsField(fldname, QVariant.Int)])
     layer.updateFields()
 
-#enter feature selection expression, the field to edit, and new value
-def changeVal(layer, exp, fld, newval):
+#This function changes a field's value based on an expression, the field to edit, and new value
+def changeVal(exp, fld, newval):
     layer.startEditing()
     layer.beginEditCommand('Edit')
     request = QgsFeatureRequest(QgsExpression(exp))
@@ -37,21 +39,27 @@ def changeVal(layer, exp, fld, newval):
     layer.endEditCommand()
     layer.commitChanges()
     print("Complete")
-    
-#select features in ped network meeting expression criteria: Pathwidth != 4 and Linktype = 2 or 3
-#dissolve road gons
-#select subset not meeting 'entirely within' roadpolygons
 
-
+#Add MPN_ prefix to original fields
 # addPfx(layer, 'MPN_')
 
+#Add OSW map fields
 # addFld(layer, "highway","string")
 # addFld(layer, "footway","string")
 # addFld(layer, "width","integer")
 # addFld(layer, "crossing:markings","string")
 
-changeVal(layer, "MPN_LINKTYPE !='8'", 'highway', 'footway2')
-# changeVal("MPN_LINKTYPE = '2' AND MPN_PATHWIDTH = '4'", 'footway', 'No sidewalk')
+#Change values for new OSW fields
+#Change all highway field values to footway
+# changeVal("MPN_LINKTYPE !='8'", 'highway', 'footway')
+
+#Change footway field valeus to sidewalk or crossing based on link type and width. Remaining features are not sidewalks or crossings
+#..and will be deleted in next script section
+# changeVal("MPN_LINKTYPE = '2' AND MPN_PATHWIDTH != '4'", 'footway', 'sidewalk')
+# changeVal("MPN_LINKTYPE = '3'", 'footway', 'crossing')
+
+
+#this script modifies the original file, it does not create new file. Make sure to create backup before running. 
 
 
 
