@@ -47,17 +47,34 @@ def changeVal(exp, fld, newval):
 # addFld(layer, "highway","string")
 # addFld(layer, "footway","string")
 # addFld(layer, "width","integer")
+# addFld(layer, "length","integer")
+# addFld(layer, "crossing","string")
 # addFld(layer, "crossing:markings","string")
 
 #Change values for new OSW fields
-#Change all highway field values to footway
+#Change OSW highway field values to footway
 # changeVal("MPN_LINKTYPE !='8'", 'highway', 'footway')
 
-#Change footway field valeus to sidewalk or crossing based on link type and width. Remaining features are not sidewalks or crossings
+#Change OSW footway field values to sidewalk or crossing based on link type and width. Remaining features are not sidewalks or crossings
 #..and will be deleted in next script section
 # changeVal("MPN_LINKTYPE = '2' AND MPN_PATHWIDTH != '4'", 'footway', 'sidewalk')
 # changeVal("MPN_LINKTYPE = '3'", 'footway', 'crossing')
 
+#Change OSW crossing:markings field value based on MPN crosswalktype field
+# changeVal("MPN_CROSSWALKTYPE = '1'", 'crossing:markings', 'zebra')
+# changeVal("MPN_CROSSWALKTYPE = '2'", 'crossing:markings', 'lines')
+# changeVal("MPN_CROSSWALKTYPE = '3'", 'crossing:markings', 'no')
+
+#Change OSW crossing field value based on MPN crossingtype field
+#NOT SURE ON THESE
+# changeVal("MPN_CROSSINGTYPE = 'Signalized'", 'crossing', 'traffic_signals')
+# changeVal("MPN_CROSSINGTYPE = 'Stop Controlled'", 'crossing', 'traffic_signals')
+# changeVal("MPN_CROSSINGTYPE = 'Uncontrolled'", 'crossing', 'unmarked')
+
+#Change OSW width and length field values based on MPN SHAPE_length and pathwidth fields
+#NOT SURE ON THESE
+# changeVal("MPN_PATHWIDTH = 'Stop Controlled'", 'crossing', 'traffic_signals')
+# changeVal("MPN_SHAPE_length = 'Uncontrolled'", 'crossing', 'unmarked')
 
 #this script modifies the original file, it does not create new file. Make sure to create backup before running. 
 
