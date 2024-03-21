@@ -1,0 +1,1 @@
+lyr = QgsProject.instance().mapLayersByName('Joined_Reproj_Added')[0]
